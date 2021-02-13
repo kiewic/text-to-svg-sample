@@ -1,4 +1,5 @@
 const TextToSVG = require('text-to-svg');
+const path = require('path');
 const fs = require('fs');
 
 const keyValuePairs = {
@@ -42,8 +43,12 @@ function createSvg(fileName, text) {
     let svg2 = fs.readFileSync('./input.svg', 'utf8');
     svg2 = svg2.replace(/<!-- paste here -->/g, svg);
 
-    const path = `/Users/gilberto/repos/svg-to-text/${fileName}.svg`;
-    fs.writeFileSync(path, svg2, undefined, { encoding: 'utf8' });
+    const dirPath = path.join(__dirname, 'out');
+    if (!fs.existsSync(dirPath)) {
+        fs.mkdirSync(dirPath);
+    }
+    const filePath = path.join(dirPath, `${fileName}.svg`);
+    fs.writeFileSync(filePath, svg2, undefined, { encoding: 'utf8' });
 
     var command = `open -a "Google Chrome"`;
     require('child_process').exec(command);
